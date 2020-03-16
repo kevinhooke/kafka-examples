@@ -11,7 +11,7 @@ public class ProducerApp {
 
 	private Properties props;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		ProducerApp app = new ProducerApp();
 		app.init();
 		app.produce();
@@ -19,12 +19,13 @@ public class ProducerApp {
 
 	public void init() throws IOException {
 		this.props = new Properties();
-		props.load(this.getClass().getResourceAsStream("prodcuer.properties"));
+		props.load(this.getClass().getResourceAsStream("/producer.properties"));
 	}
 
-	public void produce() {
+	public void produce() throws InterruptedException {
 		Producer<String, String> producer = new KafkaProducer<>(props);
 		producer.send(new ProducerRecord<String, String>("test-topic", "1", "test message"));
+		producer.flush();
 		producer.close();
 	}
 
